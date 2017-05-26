@@ -15,15 +15,34 @@
 						     //llave JSON .. Valor PHP
 		$salidaJSON = array('respuesta' => $respuesta );
 		print(json_encode($salidaJSON)); //Es un array por que hay que convertirlo, el print de esta manera lo convierte en respuesta
+	
+
+
+
 	}
 
-
+	//HACER LAS FUNCIONES DE ALTA BAJA Y CONSULTA
 
 	//MENÚ PRINCIPAL
-	$opcion=$_GET["opcion"];
+	//Menú principal
+	$opcion = $_GET["opcion"];
 	switch ($opcion) {
 		case 'valida':
 			valida();
+			break;
+		case 'guarda':
+			guarda();
+			break;
+		case 'borra':
+			borra();	
+			break;
+
+		case 'cambia' :
+			CambiaUsuario();
+			break;
+
+		case 'consulta' :
+			ConsultaUsuario();
 			break;
 		
 		default:
