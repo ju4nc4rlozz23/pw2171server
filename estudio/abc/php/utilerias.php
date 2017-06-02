@@ -1,4 +1,12 @@
-<?php 
+
+<?php
+  
+  function conecta(){
+    $conexion = mysql_connect("localhost","root",""); //Para distinguir entre conexiones se guarda la dirección
+    mysql_select_db("pw2171");
+    return $conexion;
+  }
+
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
   {
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
@@ -25,10 +33,5 @@
     }
     return $theValue;
   }
-
-  function conecta(){
-    $conexion=mysql_connect("localhost","root","");
-    mysql_select_db("pw2171");
-    return $conexion;
-  }
+  
 ?>

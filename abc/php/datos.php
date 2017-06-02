@@ -1,37 +1,85 @@
-<?php 
-	require("utilerias.php");
+<?php
+	//http://localhost/pw2171server/abc/php/datos.php?opcion=valida&usuario=pw&clave=null
 
+	require("utilerias.php");
 	function valida(){
 		$respuesta=false;
 		$conexion=conecta();
 		$u=GetSQLValueString($_POST["usuario"],"text");
 		$c=GetSQLValueString(md5($_POST["clave"]),"text");
 		$consulta=sprintf("select usuario,clave from usuarios where usuario=%s and clave=%s limit 1",$u,$c);
-
 		$resultado=mysql_query($consulta);
 		if(mysql_num_rows($resultado)>0){
 			$respuesta=true;
 		}
-						     //llave JSON .. Valor PHP
-		$salidaJSON = array('respuesta' => $respuesta );
-		print(json_encode($salidaJSON)); //Es un array por que hay que convertirlo, el print de esta manera lo convierte en respuesta
+		$salidaJSON = array('respuesta' => $respuesta);
+		print(json_encode($salidaJSON));
+	}
+	function datosUsuario(){
+		$respuesta=false;
+		$conexion=conecta();
+		$usuario=GetSQLValueString($_POST["usuario"],"text");
+		$consulta=sprintf("select * from usuarios where usuario=%s limit 1", $usuario);
+		$resultado=mysql_query($consulta);
+		$nombre="";
+		$clave="";
+		$depto=0;
+		$vigencia=0;
+		if(mysql_num_rows($resultado)>0){
+			$respuesta=true;
+			if($registro=mysql_fetch_array($resultado)){
+				$nombre=$registro["nombre"];
+				$clave=$registro["clave"];
+				$depto=$registro["departamento"];
+				$vigencia=$registro["vigencia"];
+			}
+		}
+
+		$salidaJSON= array('respuesta'    => $respuesta,
+						   'nombre'       => $nombre,
+						   'clave'        => $clave,
+						   'departamento' => $departamento,
+						   'vigencia'     => $vigencia);
+		print json_encode($salidaJSON);
 	}
 
-	//Codigo CC
-	//Mi4wMDJ8fDE0OTU1NzA5NDE4NjY7MTQ5NTU3MDk0MTg2NjsxNDk1NjYwMDM0NzA0O2p1NG5jNHJsb3p6fMOnwr3CpAZ8NTMxMzYwLjEwNDE5NTI4Nzk7ODcwMjE2MzYuMTA0MjI1NTU7NjY3Mjs0OzMwMTU5ODIyLjMyMzI2NjYxOzg7MDswOzA7MDswOzA7MDswOzA7NDswOzA7MDswOzA7MDs7MDswOzA7MDswOzA7MDstMTstMTstMTstMTstMTswOzA7MDswOzUwOzA7MDt8NzMsNzMsNDQzMzM3NSwwOzU3LDU4LDY0OTE3NDIsMDs0OCw0OCw5ODc1MzY1LDA7MjcsMjcsMTExMTE5MjUsMDsxOSwxOSwxODAzMjI3NywwOzUsNSw2Njk3NDc3LDA7MCwwLDAsMDswLDAsMCwwOzAsMCwwLDA7MCwwLDAsMDswLDAsMCwwOzAsMCwwLDA7MCwwLDAsMDswLDAsMCwwO3zDp8K/wrDDp8K/wr/Dp8KPwqDDpMKAwoDDpMKDwq/DpsKqwqDDpMKMwoDDpMKAwoDDpMK/woDDpMKAwoDDpMKAwo/DpsKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKowoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDpMKAwoDDocKAwoB8w6fCsMKAw6TCvsKAw6TCu8Knw6XCicKAw6TCgMKEw6TCqsKAw6TCgMKQw6TCgMKAw6TCgMKAw6TCgsKAw6TCgMKAw6TChMKAw6TCsMKAw6TCgMKAw6TCgMKgw6TCgMKAw6TCgMKAw6TChMKAw6TCgMKA%21END%21
+	function alta(){
+		$respuesta=false;
+		$conexion=conecta();
+		$u=GetSQLValueString($_POST["usuario"],"text");
+		$n=GetSQLValueString($_POST["nombre"],"text");
+		$c=GetSQLValueString(md5($_POST["clave"]),"text");
+		$d=GetSQLValueString($_POST["departamento"],"int");
+		$v=GetSQLValueString($_POST["vigencia"],"int");
 
-	//MENÚ PRINCIPAL
+		//Buscar si existe
+		$busca=sprintf("select usuario from usuarios where usuario=%s",$u);
+		$resultadoBusca=mysql_query($busca);
+		if(mysql_num_rows($resultadoBusca)==0){ //si no existe
+			$inserta=sprintf("insert into usuarios values(default,%s,%s,%s,%d,%d)",$u,$n,$c,$d,$v);
+			mysql_query($inserta);
+			if(mysql_affected_rows()>0){
+				$respuesta=true;
+			}
+		}
+		$salidaJSON= array('respuesta' => $respuesta);
+		print json_encode($salidaJSON);
+	}
+
+	//menú principal
 	$opcion=$_POST["opcion"];
 	switch ($opcion) {
 		case 'valida':
 			valida();
 			break;
-		
+		case 'datosusuario':
+			datosUsuario();
+			break;
+		case 'alta':
+			alta();
+			break;
 		default:
 			# code...
 			break;
 	}
- ?>
-
-
-
+?>

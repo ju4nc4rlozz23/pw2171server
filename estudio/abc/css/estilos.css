@@ -3,20 +3,28 @@ body{
 	margin: 0 auto;
 	max-width: 1024px;
 }
+
 header nav{
 	display: none;
 	text-align: center;
 }
+
 header nav ul li{
 	display: inline-block;
 }
+
 header nav ul li button{
 	width: 90px;
 }
-#secUsuarios{
+
+#artAcciones{	
 	display: none;
+	margin: 0 auto;
+	width: 500px;
 }
-#datosUsuario, #secUsuarios{
+
+#datosUsuario{
 	margin: 0 auto;
 	width: 350px;
 }
+
